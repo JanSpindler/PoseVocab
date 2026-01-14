@@ -56,7 +56,7 @@ def sample():
 
 
 if __name__ == '__main__':
-    data_dir, frame_list = 'G:/MultiviewRGB/subject00', list(range(0, 2000))
+    data_dir, frame_list = './thuman/subject00', list(range(0, 2000))
 
     """ sample key rotations """
     sample()

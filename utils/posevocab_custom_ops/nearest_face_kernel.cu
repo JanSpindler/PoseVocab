@@ -239,7 +239,7 @@ void nearest_face(at::Tensor vertices, at::Tensor faces, at::Tensor queries, at:
     const dim3 blocks((query_num - 1) / threads + 1);
 //     const int blocks = 256;
 //     const int threads = 256;
-    AT_DISPATCH_FLOATING_TYPES(vertices.type(), "nearest_face_kernel", ([&] {
+    AT_DISPATCH_FLOATING_TYPES(vertices.scalar_type(), "nearest_face_kernel", ([&] {
         nearest_face_kernel<scalar_t><<<blocks, threads>>>(
             vertices.data<scalar_t>(),
             faces.data<int>(),

@@ -421,7 +421,7 @@ def save_corres(path, pts1, pts2):
     source is red, target is blue
     """
     pts = np.concatenate([pts1, pts2], axis = 1).reshape(-1, 3)
-    lines = np.arange(0, pts.shape[0], dtype = np.int).reshape(-1, 2)
+    lines = np.arange(0, pts.shape[0], dtype = np.int32).reshape(-1, 2)
 
     with open(path, 'w') as fp:
         for vi in range(pts.shape[0]):

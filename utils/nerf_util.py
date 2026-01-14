@@ -251,8 +251,8 @@ def raw2outputs2(rgb, alpha, z_vals, white_bkgd = False):
 
 
 def gen_uv(img_w, img_h):
-    x, y = np.meshgrid(np.linspace(0, img_w - 1, img_w, dtype = np.int),
-                       np.linspace(0, img_h - 1, img_h, dtype = np.int))
+    x, y = np.meshgrid(np.linspace(0, img_w - 1, img_w, dtype = np.int32),
+                       np.linspace(0, img_h - 1, img_h, dtype = np.int32))
     uv = np.stack([x, y], axis = -1)
     return uv
 

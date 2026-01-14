@@ -70,7 +70,7 @@ class MvRgbDataset(Dataset):
                     print(f'# Selected frame indices: range({frame_range[0]}, {frame_range[1]}, {frame_range[2]})')
                     frame_range = range(frame_range[0], frame_range[1], frame_range[2])
             elif isinstance(frame_range, str):
-                frame_range = np.loadtxt(self.data_dir + '/' + frame_range).astype(np.int).tolist()
+                frame_range = np.loadtxt(self.data_dir + '/' + frame_range).astype(np.int32).tolist()
                 print(f'# Selected frame indices: {frame_range}')
             self.pose_list = list(frame_range)
         else:
@@ -360,7 +360,7 @@ class MvRgbDataset(Dataset):
 
     @staticmethod
     def gen_uv(img_w, img_h):
-        x, y = np.meshgrid(np.linspace(0, img_w - 1, img_w, dtype = np.int),
-                           np.linspace(0, img_h - 1, img_h, dtype = np.int))
+        x, y = np.meshgrid(np.linspace(0, img_w - 1, img_w, dtype = np.int32),
+                           np.linspace(0, img_h - 1, img_h, dtype = np.int32))
         uv = np.stack([x, y], axis = -1)
         return uv

@@ -52,7 +52,7 @@ def calc_cano_weight_volume(data_dir, gender = 'neutral'):
     pts = pts.reshape(-1, 3)
 
     # barycentric
-    dists, face_id, closest_pts = igl.signed_distance(pts, cano_smpl.vertices.numpy(), smpl_model.faces.astype(np.int32))
+    dists, face_id, closest_pts, _ = igl.signed_distance(pts, cano_smpl.vertices.numpy(), smpl_model.faces.astype(np.int32))
     triangles = cano_smpl.vertices.numpy()[smpl_model.faces[face_id]]
     weights = smpl_model.lbs_weights.numpy()[smpl_model.faces[face_id]]
     barycentric_weight = trimesh.triangles.points_to_barycentric(triangles, closest_pts)
