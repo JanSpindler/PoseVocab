@@ -6,13 +6,13 @@ train:
   data:
     subject_name: subject00_julian
     data_dir: './thuman/subject00'
-    frame_range: [501, 750, 1]
-    used_cam_ids: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    frame_range: [0, 2000, 1]
+    used_cam_ids: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22] #, 23]
   net_ckpt_dir: './results/subject00_julian'
   prev_ckpt: null
   save_init_ckpt: false
   start_epoch: 0
-  end_epoch: 100
+  end_epoch: 10
   ckpt_interval:
     epoch: 1
     batch: 10000
@@ -53,17 +53,17 @@ train:
 test:
   data:
     data_dir: './thuman/subject00'
-    frame_range: [500, 750, 1]
+    frame_range: [2000, 2500, 1]
     frame_win: 2
     fix_head_pose: true
   pose_data:
     data_path: './thuman/subject00/pose_00.npz'
-    frame_range: [501, 750, 1]
+    frame_range: [2000, 2500, 1]
     frame_win: 2
 
   # render view setting
   view_setting: 'free'  # 'free' or 'camera'
-  render_view_idx: 18
+  render_view_idx: 23
   global_orient: true
   img_scale: 1.0
 
