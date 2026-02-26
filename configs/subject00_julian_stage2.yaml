@@ -9,9 +9,9 @@ train:
     frame_range: [0, 2000, 1]
     used_cam_ids: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22] #, 23]
   net_ckpt_dir: './results/subject00_julian'
-  prev_ckpt: './results/subject00_julian_stage1/epoch_latest'
+  prev_ckpt: null
   save_init_ckpt: false
-  start_epoch: 11
+  start_epoch: 0
   end_epoch: 100
   ckpt_interval:
     epoch: 1
