@@ -11,8 +11,8 @@ train:
   net_ckpt_dir: './results/subject01_julian'
   prev_ckpt: null
   save_init_ckpt: false
-  start_epoch: 0
-  end_epoch: 100
+  start_epoch: 6
+  end_epoch: 50
   ckpt_interval:
     epoch: 1
     batch: 10000
@@ -25,7 +25,7 @@ train:
     N_ray_samples: 32
   compute_grad: true
   ray_sampling: # ray sampling method on training images
-    epoch_ranges: [[0, 40], [40, 9999]]
+    epoch_ranges: [[0, 30], [30, 9999]]
     schedules: ['random', 'patch']
     type: null
     patch:
