@@ -167,3 +167,4 @@ cython_debug/
 thuman/
 thuman.tar.gz
 dnarendering/
+.vscode/
