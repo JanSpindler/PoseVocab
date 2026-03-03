@@ -366,7 +366,7 @@ class AvatarTrainer(BaseTrainer):
         self.network.eval()
 
         # training data
-        pose_idx, view_idx = self.opt['train'].get('eval_training_ids', (310, 19))
+        pose_idx, view_idx = self.opt['train'].get('eval_training_ids', (150, 19))
         item = self.dataset.getitem(0,
                                     pose_idx = pose_idx,
                                     view_idx = view_idx,
