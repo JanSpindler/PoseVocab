@@ -231,8 +231,17 @@ class MvRgbDataset(Dataset):
         data_item['live_bounds'] = live_bounds
 
         if training:
-            color_img = cv.imread(self.data_dir + '/images/cam%02d/%08d.jpg' % (view_idx, pose_idx), cv.IMREAD_UNCHANGED)
-            mask_img = cv.imread(self.data_dir + '/masks/cam%02d/%08d.jpg' % (view_idx, pose_idx), cv.IMREAD_UNCHANGED)
+            img_path = self.data_dir + '/images/cam%02d/%08d.jpg' % (view_idx, pose_idx)
+            if not os.path.exists(img_path):
+                img_path = self.data_dir + '/images/cam%02d/%08d.png' % (view_idx, pose_idx)
+
+            mask_path = self.data_dir + '/masks/cam%02d/%08d.jpg' % (view_idx, pose_idx)
+            if not os.path.exists(mask_path):
+                mask_path = self.data_dir + '/masks/cam%02d/%08d.png' % (view_idx, pose_idx)
+
+            color_img = cv.imread(img_path, cv.IMREAD_UNCHANGED)
+            mask_img = cv.imread(mask_path, cv.IMREAD_UNCHANGED)
+    
             depth_path = self.depth_dir + '/cam%02d/%08d.png' % (view_idx, pose_idx)
             if os.path.exists(depth_path):
                 depth_img = cv.imread(depth_path, cv.IMREAD_UNCHANGED)
