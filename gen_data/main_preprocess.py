@@ -56,7 +56,7 @@ def sample():
 
 
 if __name__ == '__main__':
-    data_dir, frame_list = './dnarendering/0166_04', list(range(0, 180))
+    data_dir, frame_list = './dnarendering/0206_04', list(range(0, 180))
 
     """ sample key rotations """
     sample()
