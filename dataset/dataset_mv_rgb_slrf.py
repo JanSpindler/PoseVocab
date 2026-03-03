@@ -242,6 +242,18 @@ class MvRgbDataset(Dataset):
             color_img = cv.imread(img_path, cv.IMREAD_UNCHANGED)
             mask_img = cv.imread(mask_path, cv.IMREAD_UNCHANGED)
     
+            # Handle multi-channel mask images
+            if mask_img is not None and len(mask_img.shape) == 3:
+                if mask_img.shape[2] == 2:
+                    # Grayscale + alpha: use alpha channel
+                    mask_img = mask_img[:, :, 1]
+                elif mask_img.shape[2] == 4:
+                    # RGBA: use alpha channel
+                    mask_img = mask_img[:, :, 3]
+                else:
+                    # RGB: convert to grayscale
+                    mask_img = cv.cvtColor(mask_img, cv.COLOR_BGR2GRAY)
+
             depth_path = self.depth_dir + '/cam%02d/%08d.png' % (view_idx, pose_idx)
             if os.path.exists(depth_path):
                 depth_img = cv.imread(depth_path, cv.IMREAD_UNCHANGED)

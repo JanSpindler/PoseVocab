@@ -166,3 +166,4 @@ cython_debug/
 *pretrained_models/
 thuman/
 thuman.tar.gz
+dnarendering/
