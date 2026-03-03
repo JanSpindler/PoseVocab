@@ -395,7 +395,7 @@ class AvatarTrainer(BaseTrainer):
             cv.imwrite(output_dir + '/nerf_batch_%d.jpg' % self.iter_idx, (rgb_map.cpu().numpy() * 255).astype(np.uint8))
 
         # testing data
-        pose_idx, view_idx = self.opt['train'].get('eval_testing_ids', (2012, 21))
+        pose_idx, view_idx = self.opt['train'].get('eval_testing_ids', (200, 21))
         item = self.dataset.getitem(0,
                                     pose_idx = pose_idx,
                                     view_idx = view_idx,
