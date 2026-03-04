@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import cv2 as cv
 from tqdm import tqdm
+from torchmetrics.image.fid import FrechetInceptionDistance
 
 import config
 from network.avatar import AvatarNet
@@ -12,6 +13,8 @@ from utils.renderer import Renderer, gl_perspective_projection_matrix
 import utils.recon_util as recon_util
 import utils.net_util as net_util
 from utils.nerf_util import get_rays
+
+from utils.eval_utils import eval_images
 
 
 def load_img_mask(data_dir: str, view_idx: int, pose_idx: int):
@@ -77,6 +80,10 @@ def test(test_run, visualize):
     views = test_run['views']
     device = "cuda"
 
+    # Eval path
+    eval_name = f'eval_{subject_name}_frames{start_frame}_{end_frame}_views{"_".join(map(str, views))}.txt'
+    eval_path = os.path.join(data_path, eval_name)
+
     # Adjust global config
     config.opt["train"]["data"] = {
         "data_dir": data_path,
@@ -99,7 +106,13 @@ def test(test_run, visualize):
     )
     print(f'Initialized dataset with {len(mv_dataset)} frames.')
 
+    # Clear eval file if it exists
+    if os.path.exists(eval_path):
+        open(eval_path, 'w').close()
+
     # Render frames for each view
+    all_metrics = []
+    fid = FrechetInceptionDistance(feature=2048, normalize=True).to(device)
     for cam_id in views:
         # Get camera parameters
         intr = mv_dataset.intr_mats[cam_id].copy()
@@ -110,11 +123,18 @@ def test(test_run, visualize):
         # Init pos renderer
         pos_renderer = Renderer(img_w, img_h, shader_name="position")
 
+        # Eval batching
+        batch_size = 4
+        ref_imgs = torch.zeros((batch_size, img_h, img_w, 3), dtype=torch.float32).to(device)
+        pred_imgs = torch.zeros((batch_size, img_h, img_w, 3), dtype=torch.float32).to(device)
+
         # Render frames
         for frame_idx in tqdm(range(start_frame, end_frame), desc=f'Rendering cam {cam_id}'):
             # Load reference image and mask
             ref_color_img, mask_img = load_img_mask(data_path, cam_id, frame_idx)
             if ref_color_img is None or mask_img is None:
+                ref_imgs[frame_idx % batch_size] = 0
+                pred_imgs[frame_idx % batch_size] = 0
                 print(f'Warning: Missing image or mask for cam {cam_id}, frame {frame_idx}. Skipping.')
                 continue
 
@@ -172,10 +192,58 @@ def test(test_run, visualize):
             ).fill_(0)
             rgb_map[uv[:, 1], uv[:, 0]] = output['rgb_map'][0]
             rgb_map.clip_(0., 1.)
-            rgb_map = (rgb_map * 255).to(torch.uint8)
+            rgb_map_255 = (rgb_map * 255).to(torch.uint8)
+
+            # Build ground truth image (H, W, 3) in [0, 1], masked
+            gt_img = torch.from_numpy(ref_color_img.astype(np.float32) / 255.0).to(device)  # (H, W, 3)
+            gt_mask = torch.from_numpy((mask_img > 0).astype(np.float32)).to(device).unsqueeze(-1)  # (H, W, 1)
+
+            gt_img = gt_img * gt_mask  # mask out background
+            batch_idx = frame_idx % batch_size
+            ref_imgs[batch_idx] = gt_img
+            pred_imgs[batch_idx] = rgb_map
             if visualize:
-                cv.imshow('Rendered', rgb_map.detach().cpu().numpy())
+                # cv.imshow('Ground Truth', (gt_img.cpu().numpy() * 255).astype(np.uint8))
+                # cv.waitKey(1)
+                pass
+
+            # Visualize
+            if visualize:
+                cv.imshow('Rendered', rgb_map_255.detach().cpu().numpy())
                 cv.waitKey(1)
+
+            # Compute metrics for the batch
+            if (batch_idx + 1) % batch_size == 0 or frame_idx == end_frame - 1:
+                real_batch_size = batch_idx + 1 if frame_idx == end_frame - 1 else batch_size
+                # eval_images expects (B, H, W, 3)
+                batch_metrics = eval_images(
+                    pred_imgs[:real_batch_size], 
+                    ref_imgs[:real_batch_size],
+                    fid
+                )
+                all_metrics.append(batch_metrics)
+                with open(eval_path, 'a') as f:
+                    f.write(f'cam {cam_id} frame {frame_idx - real_batch_size + 1}-{frame_idx}: {batch_metrics}\n')
+                # print(f'  cam {cam_id} frame {frame_idx}: {batch_metrics}')
+
+                # Clear cache
+                torch.cuda.empty_cache()
+
+    # Average metrics across all frames
+    avg_metrics = {}
+    for key in all_metrics[0].keys():
+        avg_metrics[key] = np.mean([m[key] for m in all_metrics])
+
+    print(f'Average metrics across all frames and views:')
+    for key, value in avg_metrics.items():
+        print(f'  {key}: {value}')
+
+    fid_score = fid.compute().item()
+    print(f'Final FID score across all frames and views: {fid_score}')
+
+    with open(eval_path, 'a') as f:
+        f.write(f'Average metrics across all frames and views: {avg_metrics}\n')
+        f.write(f'Final FID score across all frames and views: {fid_score}\n')
 
 
 tests = [
@@ -185,7 +253,7 @@ tests = [
         "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
         "data_path": "./thuman/subject00",
         "start_frame": 0,
-        "end_frame": 2000,
+        "end_frame": 20,
         "views": [23],
     },
     # # subject01
