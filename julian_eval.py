@@ -131,16 +131,17 @@ def test(test_run, visualize):
         # Render frames
         for frame_idx in tqdm(range(start_frame, end_frame), desc=f'Rendering cam {cam_id}'):
             # Load reference image and mask
+            dataset_idx = frame_idx - start_frame
             ref_color_img, mask_img = load_img_mask(data_path, cam_id, frame_idx)
             if ref_color_img is None or mask_img is None:
-                ref_imgs[frame_idx % batch_size] = 0
-                pred_imgs[frame_idx % batch_size] = 0
+                ref_imgs[dataset_idx % batch_size] = 0
+                pred_imgs[dataset_idx % batch_size] = 0
                 print(f'Warning: Missing image or mask for cam {cam_id}, frame {frame_idx}. Skipping.')
                 continue
 
             # Load test data and move to device
             item = mv_dataset.getitem(
-                frame_idx, 
+                dataset_idx, 
                 training=False, 
                 extr=extr, 
                 intr=intr, 
@@ -199,7 +200,7 @@ def test(test_run, visualize):
             gt_mask = torch.from_numpy((mask_img > 0).astype(np.float32)).to(device).unsqueeze(-1)  # (H, W, 1)
 
             gt_img = gt_img * gt_mask  # mask out background
-            batch_idx = frame_idx % batch_size
+            batch_idx = dataset_idx % batch_size
             ref_imgs[batch_idx] = gt_img
             pred_imgs[batch_idx] = rgb_map
             if visualize:
