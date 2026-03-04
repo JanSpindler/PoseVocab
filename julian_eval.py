@@ -248,32 +248,32 @@ def test(test_run, visualize):
 
 
 tests = [
-    # # subject00_julian
-    # {
-    #     "subject_name": "subject00_julian",
-    #     "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
-    #     "data_path": "./thuman/subject00",
-    #     "start_frame": 2000,
-    #     "end_frame": 2500,
-    #     "views": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-    # },
-    # {
-    #     "subject_name": "subject00_julian",
-    #     "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
-    #     "data_path": "./thuman/subject00",
-    #     "start_frame": 0,
-    #     "end_frame": 2000,
-    #     "views": [23],
-    # },
-    # # 0165_08
-    # {
-    #     "subject_name": "0165_08",
-    #     "ckpt_path": "./results/0165_08/epoch_latest/net.pt",
-    #     "data_path": "./dnarendering/0165_08",
-    #     "start_frame": 180,
-    #     "end_frame": 225,
-    #     "views": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
-    # },
+    # subject00_julian
+    {
+        "subject_name": "subject00_julian",
+        "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
+        "data_path": "./thuman/subject00",
+        "start_frame": 2000,
+        "end_frame": 2500,
+        "views": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    },
+    {
+        "subject_name": "subject00_julian",
+        "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
+        "data_path": "./thuman/subject00",
+        "start_frame": 0,
+        "end_frame": 2000,
+        "views": [23],
+    },
+    # 0165_08
+    {
+        "subject_name": "0165_08",
+        "ckpt_path": "./results/0165_08/epoch_latest/net.pt",
+        "data_path": "./dnarendering/0165_08",
+        "start_frame": 180,
+        "end_frame": 225,
+        "views": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+    },
     {
         "subject_name": "0165_08",
         "ckpt_path": "./results/0165_08/epoch_latest/net.pt",
