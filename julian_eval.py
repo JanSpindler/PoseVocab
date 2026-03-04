@@ -124,7 +124,7 @@ def test(test_run, visualize):
         pos_renderer = Renderer(img_w, img_h, shader_name="position")
 
         # Eval batching
-        batch_size = 4
+        batch_size = 1
         ref_imgs = torch.zeros((batch_size, img_h, img_w, 3), dtype=torch.float32).to(device)
         pred_imgs = torch.zeros((batch_size, img_h, img_w, 3), dtype=torch.float32).to(device)
 
@@ -209,8 +209,9 @@ def test(test_run, visualize):
 
             # Visualize
             if visualize:
-                cv.imshow('Rendered', rgb_map_255.detach().cpu().numpy())
-                cv.waitKey(1)
+                # cv.imshow('Rendered', rgb_map_255.detach().cpu().numpy())
+                # cv.waitKey(1)
+                pass
 
             # Compute metrics for the batch
             if (batch_idx + 1) % batch_size == 0 or frame_idx == end_frame - 1:
@@ -247,35 +248,40 @@ def test(test_run, visualize):
 
 
 tests = [
-    # subject00
-    {
-        "subject_name": "subject00_julian",
-        "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
-        "data_path": "./thuman/subject00",
-        "start_frame": 0,
-        "end_frame": 20,
-        "views": [23],
-    },
-    # # subject01
+    # # subject00_julian
     # {
-        
+    #     "subject_name": "subject00_julian",
+    #     "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
+    #     "data_path": "./thuman/subject00",
+    #     "start_frame": 2000,
+    #     "end_frame": 2500,
+    #     "views": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
     # },
-    # # subject02
     # {
-
+    #     "subject_name": "subject00_julian",
+    #     "ckpt_path": "./results/subject00_julian/epoch_latest/net.pt",
+    #     "data_path": "./thuman/subject00",
+    #     "start_frame": 0,
+    #     "end_frame": 2000,
+    #     "views": [23],
     # },
     # # 0165_08
     # {
-
+    #     "subject_name": "0165_08",
+    #     "ckpt_path": "./results/0165_08/epoch_latest/net.pt",
+    #     "data_path": "./dnarendering/0165_08",
+    #     "start_frame": 180,
+    #     "end_frame": 225,
+    #     "views": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
     # },
-    # # 0166_04
-    # {
-
-    # },
-    # # 0206_04
-    # {
-
-    # },
+    {
+        "subject_name": "0165_08",
+        "ckpt_path": "./results/0165_08/epoch_latest/net.pt",
+        "data_path": "./dnarendering/0165_08",
+        "start_frame": 0,
+        "end_frame": 180,
+        "views": [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+    }
 ]
 
 
@@ -385,4 +391,4 @@ if __name__ == '__main__':
     }
 
     for test_run in tests:
-        test(test_run, True)
+        test(test_run, False)
